@@ -36,6 +36,16 @@ bot.onText(/\/usdToRur (.+)/, (msg,match) =>{
     handlersCurrency.takeUsdToRur(bot, chatId, match[1])
 })
 
+bot.onText(/\/eurToRur (.+)/, (msg,match) =>{
+    const chatId = msg.chat.id
+handlersCurrency.takeEurToRur(bot, chatId, match[1])
+})
+
+bot.onText(/\/rurToEur (.+)/, (msg,match) =>{
+    const chatId = msg.chat.id
+handlersCurrency.takeRurToEur(bot, chatId, match[1])
+})
+
 // Listen for any kind of message. There are different kinds of
 // messages.
 bot.on('message', (msg) => {

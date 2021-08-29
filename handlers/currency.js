@@ -1,15 +1,24 @@
 const libCurrency = require("../lib/currency.js")
 
 const takeUsdToRur = async (bot, chatId, sum) => {
-    bot.sendMessage(chatId, `${libCurrency.usdToRur(sum)}`)
+    bot.sendMessage(chatId,  await libCurrency.usdToRur(sum))
 }
 
 const takeRurToUsd = async (bot, chatId, sum) => {
-    bot.sendMessage(chatId, `${libCurrency.rurToUsd(sum)}`)
+    bot.sendMessage(chatId,  await libCurrency.rurToUsd(sum))
+}
+
+const takeEurToRur = async (bot, chatId, sum) =>{
+    bot.sendMessage(chatId, await libCurrency.eurToRur(sum))
+}
+const takeRurToEur = async (bot, chatId, sum) =>{
+    bot.sendMessage(chatId, await libCurrency.rurToEur(sum))
 }
 
 
 module.exports = {
     takeUsdToRur,
-    takeRurToUsd
+    takeRurToUsd,
+    takeEurToRur,
+    takeRurToEur
 }
