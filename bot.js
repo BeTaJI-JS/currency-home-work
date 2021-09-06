@@ -1,15 +1,17 @@
 require('dotenv').config();
 
-//const libCurrency = require("./lib/currency.js")
+const libCurrency = require("./lib/currency.js")
 const handlersCurrency = require("./handlers/currency.js")
 
 const TelegramBot = require('node-telegram-bot-api');
 
 // replace the value below with the Telegram token you receive from @BotFather
-const TOKEN =  process.env.TOKEN;
+const TOKEN = process.env.TOKEN;
 
 // Create a bot that uses 'polling' to fetch new updates
-const bot = new TelegramBot(TOKEN, {polling: true});
+const bot = new TelegramBot(TOKEN, {
+  polling: true
+});
 
 // Matches "/echo [whatever]"
 bot.onText(/\/echo (.+)/, (msg, match) => {
@@ -26,25 +28,43 @@ bot.onText(/\/echo (.+)/, (msg, match) => {
 
 //привязка команд бота
 
-bot.onText(/\/rurToUsd (.+)/ , (msg,match) =>{
-//const chatId = msg.chat.id
-handlersCurrency.takeRurToUsd(bot, msg.chat.id ,match[1])
+bot.onText(/\/to (.+)/, (msg, match) => {
+  const currency = match[1].split(" ")[0];
+  const sum = match[1].split(" ")[1];
+  if (!libCurrency.checkCurrency(currency)) {
+    bot.sendMessage(msg.chat.id, `Валюты ${currency} не существует`)
+    return
+  }
+
+  handlersCurrency.toCurrency(bot, msg.chat.id, sum, currency)
 })
 
-bot.onText(/\/usdToRur (.+)/, (msg,match) =>{
-    const chatId = msg.chat.id
-    handlersCurrency.takeUsdToRur(bot, chatId, match[1])
+bot.onText(/\/from (.+)/, (msg, match) => {
+  const currency = match[1].split(" ")[0];
+  const sum = match[1].split(" ")[1];
+  handlersCurrency.fromCurrency(bot, msg.chat.id, sum, currency)
 })
 
-bot.onText(/\/eurToRur (.+)/, (msg,match) =>{
-    const chatId = msg.chat.id
-handlersCurrency.takeEurToRur(bot, chatId, match[1])
-})
 
-bot.onText(/\/rurToEur (.+)/, (msg,match) =>{
-    const chatId = msg.chat.id
-handlersCurrency.takeRurToEur(bot, chatId, match[1])
-})
+// bot.onText(/\/rurToUsd (.+)/, (msg, match) => {
+//   //const chatId = msg.chat.id
+
+//   handlersCurrency.toCurrency(bot, msg.chat.id, match[1])
+// })
+// bot.onText(/\/usdToRur (.+)/, (msg, match) => {
+//   const chatId = msg.chat.id
+//   handlersCurrency.fromCurrency(bot, chatId, match[1])
+// })
+
+// bot.onText(/\/eurToRur (.+)/, (msg, match) => {
+//   const chatId = msg.chat.id
+//   handlersCurrency.fromCurrency(bot, chatId, match[1])
+// })
+
+// bot.onText(/\/rurToEur (.+)/, (msg, match) => {
+//   const chatId = msg.chat.id
+//   handlersCurrency.toCurrency(bot, chatId, match[1])
+// })
 
 // Listen for any kind of message. There are different kinds of
 // messages.
